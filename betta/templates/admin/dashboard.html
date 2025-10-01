@@ -1,0 +1,93 @@
+﻿{% extends "admin/layout.html" %}
+{% block admin_title %}Admin Dashboard{% endblock %}
+{% block admin_heading %}Dashboard{% endblock %}
+{% block admin_content %}
+<section class="admin-cards">
+    <div class="admin-card">
+        <span class="admin-card__label">รอชำระ</span>
+        <span class="admin-card__value">{{ orders_pending }}</span>
+    </div>
+    <div class="admin-card">
+        <span class="admin-card__label">ชำระแล้ว</span>
+        <span class="admin-card__value">{{ orders_paid }}</span>
+    </div>
+    <div class="admin-card">
+        <span class="admin-card__label">รายได้รวม</span>
+        <span class="admin-card__value">{{ total_revenue | round(2) }} {{ currency }}</span>
+    </div>
+    <div class="admin-card">
+        <span class="admin-card__label">สินค้าแอคทีฟ</span>
+        <span class="admin-card__value">{{ products_active }}</span>
+    </div>
+</section>
+<section class="admin-section">
+    <header class="admin-section__header">
+        <h2>ออเดอร์ล่าสุด</h2>
+    </header>
+    
+
+<div class="table-wrapper">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>เลขคำสั่งซื้อ</th>
+                <th>สถานะ</th>
+                <th>ยอดรวม</th>
+                <th>การชำระเงิน</th>
+                <th>การจัดส่ง</th>
+                <th>การจัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in latest_orders %}
+                <tr>
+                    <td>{{ order.order_no }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.grand_total | round(2) }} {{ order.currency }}</td>
+                    <td>
+                        {% if order.status == 'pending' %}
+                            <form method="post" action="{{ url_for('admin.confirm_payment', order_id=order.id) }}">
+                                <button class="btn-small" type="submit">ยืนยันการชำระ</button>
+                            </form>
+                        {% else %}
+                            {{ order.payments[-1].status if order.payments else '-' }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if order.status in ['paid', 'packed'] %}
+                            <form class="admin-inline-form" method="post" action="{{ url_for('admin.ship_order', order_id=order.id) }}">
+                                <input type="text" name="tracking_no" placeholder="Tracking">
+                                <button class="btn-small" type="submit">แจ้งจัดส่ง</button>
+                            </form>
+                        {% elif order.status == 'shipped' %}
+                            {{ order.shipment.tracking_no if order.shipment else 'รอดำเนินการ' }}
+                        {% elif order.status in ['canceled', 'canceled_damaged'] %}
+                            ยกเลิกแล้ว
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="admin-table__actions">
+                        {% if order.status in ['canceled', 'canceled_damaged'] %}
+                            <span class="badge {{ 'badge-warning' if order.status == 'canceled_damaged' else 'badge-info' }}">
+                                {{ 'ยกเลิก (สินค้าเสียหาย)' if order.status == 'canceled_damaged' else 'ยกเลิก (คืนสต็อก)' }}
+                            </span>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.cancel_order', order_id=order.id) }}">
+                                <input type="hidden" name="action" value="restock">
+                                <button class="btn-small btn-small--danger" type="submit">ยกเลิก + คืนสต็อก</button>
+                            </form>
+                            <form method="post" action="{{ url_for('admin.cancel_order', order_id=order.id) }}">
+                                <input type="hidden" name="action" value="damaged">
+                                <button class="btn-small btn-small--warning" type="submit">ยกเลิก (สินค้าชำรุด)</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</section>
+{% endblock %}
+

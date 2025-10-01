@@ -1,0 +1,424 @@
+﻿body {
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    background: #f5f6fa;
+    color: #222;
+}
+.container {
+    width: 90%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1.5rem 0;
+}
+.topbar {
+    background: #0d1b2a;
+    color: #fff;
+}
+.topbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+nav a {
+    color: #fff;
+    margin-left: 1rem;
+    text-decoration: none;
+}
+.logo {
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.25rem;
+}
+.hero {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+}
+.btn {
+    display: inline-block;
+    background: #1b6ca8;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+.btn-small {
+    background: #1b6ca8;
+    color: #fff;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+.product-card {
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+.product-card:hover {
+    transform: translateY(-4px);
+}
+.product-thumb img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+.badge.available {
+    background: #c5f6c7;
+    color: #146c43;
+}
+.badge.sold-out {
+    background: #ffe3e3;
+    color: #c92a2a;
+}
+.flash-list {
+    list-style: none;
+    padding: 0;
+}
+.flash {
+    background: #fff4e6;
+    border-left: 4px solid #f7971d;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.cart-table th,
+.cart-table td {
+    padding: 0.75rem;
+    background: #fff;
+    border-bottom: 1px solid #e9ecef;
+}
+.product-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+.product-detail .gallery img {
+    width: 100%;
+    border-radius: 1rem;
+}
+.product-detail .info {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+}
+.footer {
+    background: #0d1b2a;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+.stripe-message {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+}
+.stripe-message[data-variant="error"] {
+    color: #c92a2a;
+}
+.stripe-message[data-variant="success"] {
+    color: #146c43;
+}
+.admin-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+}
+.admin-sidebar {
+    background: #0d1b2a;
+    color: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: 70vh;
+}
+.admin-brand__title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    display: block;
+}
+.admin-brand__subtitle {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.admin-nav__link {
+    color: #d9e2ec;
+    text-decoration: none;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.6rem;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.admin-nav__link:hover,
+.admin-nav__link.active {
+    background: #1b263b;
+    color: #fff;
+}
+.admin-sidebar__footer {
+    margin-top: auto;
+}
+.admin-main {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 8px 26px rgba(15, 23, 42, 0.08);
+}
+.admin-main__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 1.5rem;
+}
+.admin-main__breadcrumbs {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+.admin-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.admin-card {
+    background: #f1f5f9;
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.admin-card__label {
+    font-size: 0.85rem;
+    color: #475569;
+}
+.admin-card__value {
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: #0f172a;
+}
+.admin-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.admin-section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.table-wrapper {
+    overflow-x: auto;
+}
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.admin-table th,
+.admin-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+.admin-inline-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.admin-inline-form input[type="text"] {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #cbd5f5;
+    border-radius: 0.5rem;
+}
+.admin-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+.btn-secondary {
+    display: inline-block;
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #1b6ca8;
+    color: #1b6ca8;
+    background: transparent;
+    text-decoration: none;
+}
+.btn-secondary:hover {
+    background: rgba(27, 108, 168, 0.1);
+}
+.admin-form {
+    display: grid;
+    gap: 1rem;
+}
+.admin-form label,
+.admin-form fieldset,
+.admin-form legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-weight: 500;
+}
+.admin-form input[type="text"],
+.admin-form input[type="number"],
+.admin-form input[type="email"],
+.admin-form input[type="password"],
+.admin-form textarea {
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.6rem;
+    border: 1px solid #cbd5e1;
+}
+.admin-form fieldset {
+    border: 1px solid #cbd5e1;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+.admin-form .checkbox {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+}
+@media (max-width: 900px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+    }
+    .admin-sidebar {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .admin-sidebar__footer {
+        width: 100%;
+    }
+    .admin-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    .admin-nav__link {
+        padding: 0.5rem 0.75rem;
+    }
+}
+.price-breakdown {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 2rem;
+    display: grid;
+    gap: 0.5rem;
+    max-width: 360px;
+}
+.price-breakdown li {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 0.6rem 0.9rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+    font-size: 0.95rem;
+}
+.price-breakdown li.total {
+    font-weight: 600;
+    background: #1b6ca8;
+    color: #fff;
+}
+.admin-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+.admin-tabs__link {
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: #e2e8f0;
+    color: #0f172a;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.admin-tabs__link.active {
+    background: #1b6ca8;
+    color: #fff;
+}
+.tab-description {
+    margin-bottom: 1.5rem;
+    color: #475569;
+    font-size: 0.95rem;
+}
+.field-hint {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+.admin-table__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.btn-small--danger {
+    background: #e11d48;
+    color: #fff;
+    border: none;
+}
+.btn-small--danger:hover {
+    background: #be123c;
+}
+.btn-small--warning {
+    background: #f97316;
+    color: #fff;
+    border: none;
+}
+.btn-small--warning:hover {
+    background: #ea580c;
+}
+.badge-info {
+    background: #bfdbfe;
+    color: #1d4ed8;
+}
+.badge-warning {
+    background: #fde68a;
+    color: #b45309;
+}
+.help-section {
+    margin-bottom: 2rem;
+}
+.help-section h2 {
+    margin-bottom: 0.75rem;
+}
+.help-section article {
+    background: #fff;
+    border-radius: 0.9rem;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+    margin-bottom: 1rem;
+}
+.help-section ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+}
+.help-section li {
+    margin-bottom: 0.4rem;
+}

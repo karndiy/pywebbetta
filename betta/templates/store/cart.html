@@ -1,0 +1,39 @@
+﻿{% extends "base.html" %}
+{% block title %}ตะกร้าสินค้า{% endblock %}
+{% block content %}
+<h1>ตะกร้าสินค้า</h1>
+{% if cart.items %}
+<table class="cart-table">
+    <thead>
+        <tr>
+            <th>สินค้า</th>
+            <th>จำนวน</th>
+            <th>ราคา</th>
+            <th>รวม</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart.items %}
+            <tr>
+                <td>{{ item.variant.product.localized_title('th') }}</td>
+                <td>{{ item.qty }}</td>
+                <td>{{ item.price_at | round(2) }}</td>
+                <td>{{ item.total_price | round(2) }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('store.remove_from_cart', item_id=item.id) }}">
+                        <button type="submit" class="link">ลบ</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="cart-summary">
+    <p>ยอดรวม: {{ totals.subtotal | round(2) }} {{ currency }}</p>
+    <a class="btn" href="{{ url_for('store.checkout') }}">ไปหน้าเช็คเอาต์</a>
+</div>
+{% else %}
+<p>ยังไม่มีสินค้าในตะกร้า</p>
+{% endif %}
+{% endblock %}

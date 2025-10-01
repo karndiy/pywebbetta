@@ -1,0 +1,29 @@
+﻿{% extends "admin/layout.html" %}
+{% block admin_title %}Settings{% endblock %}
+{% block admin_heading %}การตั้งค่า{% endblock %}
+{% block admin_content %}
+<nav class="admin-tabs">
+    {% for tab in tabs %}
+        <a class="admin-tabs__link {{ 'active' if tab.key == active_tab else '' }}" href="{{ url_for('admin.settings', tab=tab.key) }}">{{ tab.label }}</a>
+    {% endfor %}
+</nav>
+<p class="tab-description">{{ section.description }}</p>
+<form method="post" class="admin-form admin-settings-form">
+    <input type="hidden" name="tab" value="{{ active_tab }}">
+    {% for field in section.fields %}
+        <label>{{ field.label }}
+            {% if field.input_type == 'textarea' %}
+                <textarea name="{{ field.key }}" placeholder="{{ field.placeholder or '' }}">{{ values[field.key] }}</textarea>
+            {% else %}
+                <input type="{{ field.input_type }}" name="{{ field.key }}" value="{{ values[field.key] }}" placeholder="{{ field.placeholder or '' }}">
+            {% endif %}
+            {% if field.help_text %}
+                <span class="field-hint">{{ field.help_text }}</span>
+            {% endif %}
+        </label>
+    {% endfor %}
+    <div class="admin-actions">
+        <button type="submit" class="btn">บันทึกการตั้งค่า</button>
+    </div>
+</form>
+{% endblock %}

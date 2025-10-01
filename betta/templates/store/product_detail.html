@@ -1,0 +1,49 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ product.localized_title('th') }}{% endblock %}
+{% block content %}
+<article class="product-detail">
+    <div class="gallery">
+        {% for media in gallery %}
+            {% if media.kind == 'image' %}
+                <img src="{{ media.url }}" alt="{{ product.localized_title('th') }}">
+            {% else %}
+                <video controls src="{{ media.url }}"></video>
+            {% endif %}
+        {% else %}
+            <div class="placeholder">ไม่มีภาพ</div>
+        {% endfor %}
+    </div>
+    <div class="info">
+        <h1>{{ product.localized_title('th') }}</h1>
+        {% set variant = variant or product.primary_variant() %}
+        {% if variant %}
+            <p class="price">{{ variant.price | round(2) }} {{ currency }}</p>
+            <ul class="attributes">
+                {% for key, value in variant.attributes.items() %}
+                    {% if key == 'lineage' %}
+                        <li><strong>สายพ่อแม่:</strong> พ่อ {{ value.sire }} / แม่ {{ value.dam }}</li>
+                    {% else %}
+                        <li><strong>{{ key|replace('_', ' ')|title }}:</strong> {{ value }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% if variant.stock_qty > 0 %}
+                <form method="post" action="{{ url_for('store.add_to_cart') }}">
+                    <input type="hidden" name="variant_id" value="{{ variant.id }}">
+                    <button type="submit" class="btn">เพิ่มลงตะกร้า</button>
+                </form>
+            {% else %}
+                <p class="badge sold-out">Sold out</p>
+            {% endif %}
+        {% endif %}
+        <section class="description">
+            <h2>รายละเอียด</h2>
+            <p>{{ product.desc_th or product.desc_en }}</p>
+        </section>
+        <section class="policy">
+            <h2>นโยบาย DOA</h2>
+            <p>กรุณาถ่ายวิดีโอแกะกล่องภายใน 2 ชั่วโมงหลังได้รับสินค้า หากมีปัญหาสามารถติดต่อเราได้ทันทีพร้อมหลักฐาน</p>
+        </section>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,68 @@
+﻿{% extends "admin/layout.html" %}
+{% block admin_title %}{{ 'แก้ไข' if product else 'เพิ่ม' }}สินค้า{% endblock %}
+{% block admin_heading %}{{ 'แก้ไข' if product else 'เพิ่ม' }}สินค้า{% endblock %}
+{% block admin_content %}
+{% set attrs = variant.attributes if variant else {} %}
+<form method="post" enctype="multipart/form-data" class="admin-form">
+    {% if not product %}
+        <label>SKU
+            <input type="text" name="sku" required>
+        </label>
+    {% endif %}
+    <label>ชื่อ (TH)
+        <input type="text" name="title_th" value="{{ product.title_th if product else '' }}" required>
+    </label>
+    <label>ชื่อ (EN)
+        <input type="text" name="title_en" value="{{ product.title_en if product else '' }}" required>
+    </label>
+    <label>ราคา
+        <input type="number" step="0.01" name="price" value="{{ variant.price if variant else '' }}" required>
+    </label>
+    <label>น้ำหนัก (กรัม)
+        <input type="number" name="weight_grams" value="{{ variant.weight_grams if variant else '' }}">
+    </label>
+    <label>สต็อก (จำนวน)
+        <input type="number" name="stock_qty" value="{{ variant.stock_qty if variant else '' }}">
+    </label>
+    <label class="checkbox">
+        <input type="checkbox" name="is_unique" {% if product and product.is_unique %}checked{% endif %}> สินค้าเฉพาะ (จำกัด 1 ชิ้น)
+    </label>
+    <fieldset>
+        <legend>ข้อมูลเพิ่มเติม</legend>
+        <label>ครีบ (Tail)
+            <input type="text" name="tail" value="{{ attrs.get('tail', '') }}">
+        </label>
+        <label>สี (Color)
+            <input type="text" name="color" value="{{ attrs.get('color', '') }}">
+        </label>
+        <label>เกรด (Grade)
+            <input type="text" name="grade" value="{{ attrs.get('grade', '') }}">
+        </label>
+        <label>เพศ (Sex)
+            <input type="text" name="sex" value="{{ attrs.get('sex', '') }}">
+        </label>
+        <label>อายุ (เดือน)
+            <input type="number" name="age" value="{{ attrs.get('age_months', '') }}">
+        </label>
+        <label>สุขภาพ
+            <input type="text" name="health" value="{{ attrs.get('health', '') }}">
+        </label>
+        {% set lineage = attrs.get('lineage', {}) %}
+        <label>สายพันธุ์ (พ่อ)
+            <input type="text" name="lineage_sire" value="{{ lineage.get('sire', '') }}">
+        </label>
+        <label>สายพันธุ์ (แม่)
+            <input type="text" name="lineage_dam" value="{{ lineage.get('dam', '') }}">
+        </label>
+    </fieldset>
+    {% if not product %}
+        <label>สื่อสินค้า (ภาพ/วิดีโอ)
+            <input type="file" name="media" multiple>
+        </label>
+    {% endif %}
+    <div class="admin-actions">
+        <button type="submit" class="btn">บันทึก</button>
+        <a class="btn-secondary" href="{{ url_for('admin.product_list') }}">ยกเลิก</a>
+    </div>
+</form>
+{% endblock %}

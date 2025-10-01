@@ -1,0 +1,43 @@
+﻿<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Betta Shop{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <meta property="og:title" content="{% block og_title %}Betta Shop{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Show grade betta fish for sale{% endblock %}">
+</head>
+<body>
+<header class="topbar">
+    <div class="container">
+        <a href="{{ url_for('store.index') }}" class="logo">Betta Paradise</a>
+        <nav>
+            <a href="{{ url_for('store.product_list') }}">Fish Catalog</a>
+            <a href="{{ url_for('store.cart_view') }}">Cart</a>
+            <a href="{{ url_for('store.help_page') }}">คู่มือการใช้งาน</a>
+            <a href="https://line.me/R/ti/p/@bettashop" target="_blank" rel="noopener">LINE</a>
+        </nav>
+    </div>
+</header>
+<main class="container">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <ul class="flash-list">
+                {% for category, message in messages %}
+                    <li class="flash flash-{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</main>
+<footer class="footer">
+    <div class="container">
+        <p>&copy; {{ 2025 }} Betta Paradise Farm. All rights reserved.</p>
+    </div>
+</footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+

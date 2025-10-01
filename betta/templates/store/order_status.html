@@ -1,0 +1,63 @@
+﻿{% extends "base.html" %}
+{% block title %}ข้อมูลคำสั่งซื้อ {{ order.order_no }}{% endblock %}
+{% block content %}
+{% set payment = order.payments[-1] if order.payments else None %}
+{% set other_total = -(order.discount or 0) %}
+<h1>สถานะคำสั่งซื้อ {{ order.order_no }}</h1>
+<p>สถานะปัจจุบัน: <strong>{{ order.status }}</strong></p>
+<section class="order-summary">
+    <h2>สรุปราคา</h2>
+    <ul class="price-breakdown">
+        <li><span>ราคาสินค้า</span><span>{{ order.subtotal | round(2) }} {{ order.currency }}</span></li>
+        <li><span>ค่าจัดส่ง</span><span>{{ (order.shipping_fee or 0) | round(2) }} {{ order.currency }}</span></li>
+        <li><span>อื่นๆ</span><span>{{ other_total | round(2) }} {{ order.currency }}</span></li>
+        <li class="total"><span>ยอดรวม</span><span>{{ order.grand_total | round(2) }} {{ order.currency }}</span></li>
+    </ul>
+</section>
+<section class="payment">
+    <h2>การชำระเงิน</h2>
+    <p>ช่องทาง: {{ order.payment_method }}</p>
+    {% if payment %}
+        <p>สถานะการชำระเงิน: {{ payment.status }}</p>
+    {% endif %}
+    {% if order.payment_method in ['promptpay', 'transfer'] and order.status == 'pending' %}
+        <img class="qr" src="{{ url_for('store.promptpay_qr', order_no=order.order_no) }}" alt="PromptPay QR">
+        <form method="post" action="{{ url_for('store.upload_slip', order_no=order.order_no) }}" enctype="multipart/form-data">
+            <label>อัปโหลดสลิป:
+                <input type="file" name="slip" accept="image/*" required>
+            </label>
+            <button type="submit" class="btn">ส่งสลิป</button>
+        </form>
+    {% elif order.payment_method == 'stripe' and order.status == 'pending' %}
+        <form id="stripe-payment-form"
+              data-intent-url="{{ url_for('store.stripe_payment_intent', order_no=order.order_no) }}"
+              data-confirm-url="{{ url_for('store.stripe_confirm_payment', order_no=order.order_no) }}">
+            <div id="stripe-payment-element"></div>
+            <button type="submit" class="btn">ชำระด้วยบัตร</button>
+            <p class="stripe-message" data-stripe-message hidden></p>
+        </form>
+    {% endif %}
+</section>
+<section class="items">
+    <h2>สินค้า</h2>
+    <ul>
+        {% for item in order.items %}
+            <li>{{ item.title_snapshot }} x {{ item.qty }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% if order.shipment %}
+<section class="shipment">
+    <h2>การจัดส่ง</h2>
+    <p>ขนส่ง: {{ order.shipment.carrier }}</p>
+    <p>เลขพัสดุ: {{ order.shipment.tracking_no }}</p>
+    <p>สถานะ: {{ order.shipment.status }}</p>
+</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+    {% if order.payment_method == 'stripe' and order.status == 'pending' %}
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="{{ url_for('static', filename='js/stripe_checkout.js') }}" defer></script>
+    {% endif %}
+{% endblock %}

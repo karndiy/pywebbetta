@@ -1,0 +1,53 @@
+﻿{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<h1>เช็คเอาต์</h1>
+<form method="post" class="checkout-form">
+    <section>
+        <h2>ข้อมูลผู้รับ</h2>
+        <label>ชื่อ-นามสกุล
+            <input type="text" name="name" required>
+        </label>
+        <label>อีเมล
+            <input type="email" name="email" required>
+        </label>
+        <label>โทรศัพท์
+            <input type="tel" name="phone" required>
+        </label>
+        <label>ประเทศ
+            <select name="country">
+                <option value="TH">ไทย</option>
+                <option value="US">สหรัฐอเมริกา</option>
+                <option value="DE">เยอรมนี</option>
+                <option value="JP">ญี่ปุ่น</option>
+            </select>
+        </label>
+        <label>ที่อยู่จัดส่ง
+            <textarea name="address" rows="3" required></textarea>
+        </label>
+    </section>
+    <section>
+        <h2>การชำระเงิน</h2>
+        <label>วิธีชำระเงิน
+            <select name="payment_method">
+                <option value="promptpay">PromptPay QR</option>
+                <option value="transfer">โอนธนาคาร</option>
+                <option value="stripe">บัตรเครดิต (Stripe)</option>
+            </select>
+        </label>
+        <label>คูปองส่วนลด
+            <input type="text" name="coupon" placeholder="THAI500">
+        </label>
+    </section>
+    <button type="submit" class="btn">ยืนยันคำสั่งซื้อ</button>
+</form>
+<section class="order-review">
+    <h2>สรุปรายการ</h2>
+    <ul>
+        {% for item in cart.items %}
+            <li>{{ item.variant.product.localized_title('th') }} x {{ item.qty }} - {{ item.total_price | round(2) }} {{ currency }}</li>
+        {% endfor %}
+    </ul>
+    <p>ยอดรวม: {{ cart.total() | round(2) }} {{ currency }}</p>
+</section>
+{% endblock %}

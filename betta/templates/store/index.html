@@ -1,0 +1,48 @@
+﻿{% extends "base.html" %}
+{% block title %}Betta Paradise - Unique Betta Fish{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>ปลากัดคัดพิเศษ พร้อมจัดส่งทั่วโลก</h1>
+    <p>เลือกชมปลากัดหายาก สายประกวด และไลน์เพาะคุณภาพจากฟาร์ม Betta Paradise</p>
+    <a class="btn" href="{{ url_for('store.product_list') }}">ดูปลาทั้งหมด</a>
+</section>
+<section class="featured">
+    <h2>หมวดหมู่ยอดนิยม</h2>
+    <div class="tag-grid">
+        {% for tag in featured_tags %}
+            <a class="tag-card" href="{{ url_for('store.product_list', tail=tag.slug) }}">{{ tag.name }}</a>
+        {% else %}
+            <p>ยังไม่มีแท็ก</p>
+        {% endfor %}
+    </div>
+</section>
+<section class="product-grid">
+    <h2>ปลากัดมาใหม่</h2>
+    <div class="grid">
+        {% for product in products %}
+            {% set variant = product.primary_variant() %}
+            <article class="product-card">
+                <a href="{{ url_for('store.product_detail', sku=product.sku) }}">
+                    <div class="product-thumb">
+                        {% set media = product.media[0].media if product.media %}
+                        {% if media %}
+                            <img src="{{ media.url }}" alt="{{ product.title_en or product.title_th }}">
+                        {% else %}
+                            <div class="placeholder">No Image</div>
+                        {% endif %}
+                    </div>
+                    <h3>{{ product.localized_title('th') }}</h3>
+                    {% if variant %}
+                        <p class="price">{{ variant.price | round(2) }} {{ currency }}</p>
+                        <p class="badge {{ 'sold-out' if variant.stock_qty == 0 else 'available' }}">
+                            {{ 'Sold out' if variant.stock_qty == 0 else 'Available' }}
+                        </p>
+                    {% endif %}
+                </a>
+            </article>
+        {% else %}
+            <p>ยังไม่มีสินค้า</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

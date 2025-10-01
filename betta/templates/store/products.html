@@ -1,0 +1,51 @@
+﻿{% extends "base.html" %}
+{% block title %}Fish Catalog{% endblock %}
+{% block content %}
+<h1>ปลากัดทั้งหมด</h1>
+<div class="filters">
+    <form method="get">
+        <label>หาง:
+            <input type="text" name="tail" value="{{ request.args.get('tail', '') }}">
+        </label>
+        <label>สี:
+            <input type="text" name="color" value="{{ request.args.get('color', '') }}">
+        </label>
+        <label>เกรด:
+            <input type="text" name="grade" value="{{ request.args.get('grade', '') }}">
+        </label>
+        <label>ราคาเริ่ม:
+            <input type="number" name="price_min" value="{{ request.args.get('price_min', '') }}">
+        </label>
+        <label>ราคาสูงสุด:
+            <input type="number" name="price_max" value="{{ request.args.get('price_max', '') }}">
+        </label>
+        <button type="submit" class="btn">กรอง</button>
+    </form>
+</div>
+<div class="grid">
+    {% for product in products %}
+        {% set variant = product.primary_variant() %}
+        <article class="product-card">
+            <a href="{{ url_for('store.product_detail', sku=product.sku) }}">
+                <div class="product-thumb">
+                    {% set media = product.media[0].media if product.media %}
+                    {% if media %}
+                        <img src="{{ media.url }}" alt="{{ product.title_en or product.title_th }}">
+                    {% else %}
+                        <div class="placeholder">No Image</div>
+                    {% endif %}
+                </div>
+                <h3>{{ product.localized_title('th') }}</h3>
+                {% if variant %}
+                    <p class="price">{{ variant.price | round(2) }} {{ currency }}</p>
+                    <p class="badge {{ 'sold-out' if variant.stock_qty == 0 else 'available' }}">
+                        {{ 'Sold out' if variant.stock_qty == 0 else 'Available' }}
+                    </p>
+                {% endif %}
+            </a>
+        </article>
+    {% else %}
+        <p>ไม่พบสินค้าที่ตรงกับการค้นหา</p>
+    {% endfor %}
+</div>
+{% endblock %}

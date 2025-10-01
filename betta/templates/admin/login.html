@@ -1,0 +1,14 @@
+﻿{% extends "base.html" %}
+{% block title %}Admin Login{% endblock %}
+{% block content %}
+<h1>เข้าสู่ระบบผู้ดูแล</h1>
+<form method="post" class="auth-form">
+    <label>อีเมล
+        <input type="email" name="email" required>
+    </label>
+    <label>รหัสผ่าน
+        <input type="password" name="password" required>
+    </label>
+    <button type="submit" class="btn">เข้าสู่ระบบ</button>
+</form>
+{% endblock %}

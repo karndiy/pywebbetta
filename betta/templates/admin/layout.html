@@ -1,0 +1,32 @@
+﻿{% extends "base.html" %}
+{% block title %}{% block admin_title %}Admin Panel{% endblock %}{% endblock %}
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <div class="admin-brand">
+            <span class="admin-brand__title">Control Panel</span>
+            <span class="admin-brand__subtitle">Betta Paradise</span>
+        </div>
+        <nav class="admin-nav">
+            <a class="admin-nav__link {{ 'active' if request.endpoint == 'admin.dashboard' else '' }}" href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+            <a class="admin-nav__link {{ 'active' if request.endpoint in ['admin.product_list', 'admin.product_edit', 'admin.product_create'] else '' }}" href="{{ url_for('admin.product_list') }}">Products</a>
+            <a class="admin-nav__link {{ 'active' if request.endpoint.startswith('admin.settings') else '' }}" href="{{ url_for('admin.settings') }}">Settings</a>
+            <a class="admin-nav__link" href="{{ url_for('store.help_page') }}" target="_blank">Help</a>
+            <a class="admin-nav__link" href="{{ url_for('store.index') }}" target="_blank">View Storefront</a>
+        </nav>
+        <div class="admin-sidebar__footer">
+            <a class="admin-nav__link" href="{{ url_for('admin.logout') }}">Logout</a>
+        </div>
+    </aside>
+    <section class="admin-main">
+        <header class="admin-main__header">
+            <h1>{% block admin_heading %}Admin{% endblock %}</h1>
+            <p class="admin-main__breadcrumbs">You are on <strong>{{ request.endpoint }}</strong></p>
+        </header>
+        <div class="admin-main__body">
+            {% block admin_content %}{% endblock %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+

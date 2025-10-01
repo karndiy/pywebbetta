@@ -1,0 +1,35 @@
+﻿{% extends "admin/layout.html" %}
+{% block admin_title %}Manage Products{% endblock %}
+{% block admin_heading %}สินค้า{% endblock %}
+{% block admin_content %}
+<div class="admin-actions">
+    <a class="btn" href="{{ url_for('admin.product_create') }}">+ เพิ่มสินค้าใหม่</a>
+</div>
+<div class="table-wrapper">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>ชื่อ</th>
+                <th>ราคา</th>
+                <th>สต็อก</th>
+                <th>สถานะ</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                {% set variant = product.primary_variant() %}
+                <tr>
+                    <td>{{ product.sku }}</td>
+                    <td>{{ product.localized_title('th') }}</td>
+                    <td>{{ variant.price if variant else '-' }}</td>
+                    <td>{{ variant.stock_qty if variant else '-' }}</td>
+                    <td>{{ product.status }}</td>
+                    <td><a class="link" href="{{ url_for('admin.product_edit', product_id=product.id) }}">แก้ไข</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
