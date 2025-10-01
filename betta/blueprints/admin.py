@@ -15,8 +15,10 @@ from ..services.settings import SETTINGS_SCHEMA, get_settings_values, save_setti
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
+from slugify import slugify
 
 from ..models import (
+    BlogPost,
     Media,
     Order,
     Payment,
@@ -159,6 +161,89 @@ def product_create():
         return redirect(url_for("admin.product_list"))
 
     return render_template("admin/product_form.html", product=None)
+
+
+
+@admin_bp.route("/blog")
+@login_required
+def blog_list():
+    posts = BlogPost.query.order_by(BlogPost.created_at.desc()).all()
+    return render_template("admin/blog_list.html", posts=posts)
+
+
+@admin_bp.route("/blog/create", methods=["GET", "POST"])
+@login_required
+def blog_create():
+    if request.method == "POST":
+        title = request.form.get("title")
+        slug_value = request.form.get("slug") or title or ""
+        content = request.form.get("content")
+        hero_image = request.form.get("hero_image")
+        is_published = bool(request.form.get("is_published"))
+        if not title or not content:
+            flash("กรุณากรอกข้อมูลให้ครบถ้วน", "error")
+            return render_template("admin/blog_form.html", post=None)
+        base_slug = slugify(slug_value)
+        if not base_slug:
+            base_slug = f"post-{int(datetime.utcnow().timestamp())}"
+        unique_slug = base_slug
+        counter = 2
+        while BlogPost.query.filter_by(slug=unique_slug).first():
+            unique_slug = f"{base_slug}-{counter}"
+            counter += 1
+        post = BlogPost(title=title, slug=unique_slug, content=content, hero_image=hero_image, is_published=is_published)
+        if is_published:
+            post.publish()
+        db.session.add(post)
+        db.session.commit()
+        flash("สร้างบทความเรียบร้อยแล้ว", "success")
+        return redirect(url_for("admin.blog_list"))
+    return render_template("admin/blog_form.html", post=None)
+
+
+@admin_bp.route("/blog/<int:post_id>/edit", methods=["GET", "POST"])
+@login_required
+def blog_edit(post_id: int):
+    post = BlogPost.query.get_or_404(post_id)
+    if request.method == "POST":
+        title = request.form.get("title")
+        slug_value = request.form.get("slug") or title or post.slug
+        content = request.form.get("content")
+        hero_image = request.form.get("hero_image")
+        is_published = bool(request.form.get("is_published"))
+        if not title or not content:
+            flash("กรุณากรอกข้อมูลให้ครบถ้วน", "error")
+            return render_template("admin/blog_form.html", post=post)
+        base_slug = slugify(slug_value) or post.slug
+        unique_slug = base_slug
+        if unique_slug != post.slug and BlogPost.query.filter(BlogPost.slug == unique_slug, BlogPost.id != post.id).first():
+            counter = 2
+            while BlogPost.query.filter(BlogPost.slug == f"{base_slug}-{counter}", BlogPost.id != post.id).first():
+                counter += 1
+            unique_slug = f"{base_slug}-{counter}"
+        post.title = title
+        post.slug = unique_slug
+        post.content = content
+        post.hero_image = hero_image
+        post.is_published = is_published
+        if is_published:
+            post.publish()
+        else:
+            post.published_at = None
+        db.session.commit()
+        flash("อัปเดตบทความแล้ว", "success")
+        return redirect(url_for("admin.blog_list"))
+    return render_template("admin/blog_form.html", post=post)
+
+
+@admin_bp.post("/blog/<int:post_id>/delete")
+@login_required
+def blog_delete(post_id: int):
+    post = BlogPost.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash("ลบบทความแล้ว", "info")
+    return redirect(url_for("admin.blog_list"))
 
 
 @admin_bp.route("/settings", methods=["GET", "POST"])
@@ -323,4 +408,5 @@ def cancel_order(order_id: int):
         flash("ยกเลิกคำสั่งซื้อโดยระบุว่าสินค้าเสียหายแล้ว", "warning")
 
     return redirect(url_for("admin.dashboard"))
+
 

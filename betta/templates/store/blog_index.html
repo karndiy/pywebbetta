@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Blog - Betta Paradise{% endblock %}
+{% block content %}
+<section class="blog-hero">
+    <h1>????? Betta Paradise</h1>
+    <p>????????????? ??????????????? ????????????????????????</p>
+</section>
+<section class="blog-list">
+    {% for post in posts %}
+        <article class="blog-card">
+            <a href="{{ url_for('store.blog_detail', slug=post.slug) }}">
+                {% if post.hero_image %}
+                    <div class="blog-card__thumb">
+                        <img src="{{ post.hero_image }}" alt="{{ post.title }}">
+                    </div>
+                {% endif %}
+                <div class="blog-card__body">
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.content[:180] }}...</p>
+                    {% if post.published_at %}
+                        <span class="blog-card__meta">??????? {{ post.published_at.strftime('%d %B %Y') }}</span>
+                    {% endif %}
+                </div>
+            </a>
+        </article>
+    {% else %}
+        <p>?????????????????????</p>
+    {% endfor %}
+</section>
+{% endblock %}

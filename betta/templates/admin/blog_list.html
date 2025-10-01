@@ -1,0 +1,39 @@
+﻿{% extends "admin/layout.html" %}
+{% block admin_title %}Blog Posts{% endblock %}
+{% block admin_heading %}บทความ{% endblock %}
+{% block admin_content %}
+<div class="admin-actions">
+    <a class="btn" href="{{ url_for('admin.blog_create') }}">+ สร้างบทความ</a>
+</div>
+<div class="table-wrapper">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ชื่อบทความ</th>
+                <th>Slug</th>
+                <th>สถานะ</th>
+                <th>เผยแพร่เมื่อ</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.slug }}</td>
+                    <td>{{ 'เผยแพร่' if post.is_published else 'ฉบับร่าง' }}</td>
+                    <td>{{ post.published_at if post.published_at else '-' }}</td>
+                    <td class="admin-table__actions">
+                        <a class="link" href="{{ url_for('admin.blog_edit', post_id=post.id) }}">แก้ไข</a>
+                        <form method="post" action="{{ url_for('admin.blog_delete', post_id=post.id) }}" onsubmit="return confirm('ยืนยันการลบบทความ?');">
+                            <button class="btn-small btn-small--danger" type="submit">ลบ</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">ยังไม่มีบทความ</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

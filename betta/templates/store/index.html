@@ -45,4 +45,25 @@
         {% endfor %}
     </div>
 </section>
+
+<section class="blog-preview">
+    <div class="blog-preview__header">
+        <h2>บทความล่าสุด</h2>
+        <a class="link" href="{{ url_for('store.blog_index') }}">ดูทั้งหมด</a>
+    </div>
+    <div class="blog-preview__list">
+        {% for post in recent_posts %}
+            <article class="blog-preview__card">
+                <a href="{{ url_for('store.blog_detail', slug=post.slug) }}">
+                    <h3>{{ post.title }}</h3>
+                    {% if post.published_at %}<p class="meta">{{ post.published_at.strftime('%d %b %Y') }}</p>{% endif %}
+                    <p>{{ post.content|striptags|truncate(120) }}</p>
+                </a>
+            </article>
+        {% else %}
+            <p>ยังไม่มีบทความเผยแพร่</p>
+        {% endfor %}
+    </div>
+</section>
+
 {% endblock %}

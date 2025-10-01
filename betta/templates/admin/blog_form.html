@@ -1,0 +1,27 @@
+﻿{% extends "admin/layout.html" %}
+{% block admin_title %}{{ 'แก้ไข' if post else 'สร้าง' }}บทความ{% endblock %}
+{% block admin_heading %}{{ 'แก้ไข' if post else 'สร้าง' }}บทความ{% endblock %}
+{% block admin_content %}
+<form method="post" class="admin-form blog-form">
+    <label>ชื่อบทความ
+        <input type="text" name="title" value="{{ post.title if post else '' }}" required>
+    </label>
+    <label>Slug
+        <input type="text" name="slug" value="{{ post.slug if post else '' }}" placeholder="เว้นว่างเพื่อสร้างอัตโนมัติ">
+    </label>
+    <label>รูปภาพ (URL)
+        <input type="text" name="hero_image" value="{{ post.hero_image if post else '' }}" placeholder="https://example.com/image.jpg">
+    </label>
+    <label>เนื้อหา
+        <textarea name="content" rows="10" required>{{ post.content if post else '' }}</textarea>
+    </label>
+    <label class="checkbox">
+        <input type="checkbox" name="is_published" {% if post and post.is_published %}checked{% endif %}>
+        เผยแพร่ทันที
+    </label>
+    <div class="admin-actions">
+        <button type="submit" class="btn">บันทึก</button>
+        <a class="btn-secondary" href="{{ url_for('admin.blog_list') }}">ยกเลิก</a>
+    </div>
+</form>
+{% endblock %}

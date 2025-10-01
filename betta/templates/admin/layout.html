@@ -11,6 +11,7 @@
             <a class="admin-nav__link {{ 'active' if request.endpoint == 'admin.dashboard' else '' }}" href="{{ url_for('admin.dashboard') }}">Dashboard</a>
             <a class="admin-nav__link {{ 'active' if request.endpoint in ['admin.product_list', 'admin.product_edit', 'admin.product_create'] else '' }}" href="{{ url_for('admin.product_list') }}">Products</a>
             <a class="admin-nav__link {{ 'active' if request.endpoint.startswith('admin.settings') else '' }}" href="{{ url_for('admin.settings') }}">Settings</a>
+            <a class="admin-nav__link {{ 'active' if request.endpoint.startswith('admin.blog') else '' }}" href="{{ url_for('admin.blog_list') }}">Blog</a>
             <a class="admin-nav__link" href="{{ url_for('store.help_page') }}" target="_blank">Help</a>
             <a class="admin-nav__link" href="{{ url_for('store.index') }}" target="_blank">View Storefront</a>
         </nav>

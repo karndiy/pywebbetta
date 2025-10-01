@@ -22,6 +22,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from ..models import (
+    BlogPost,
     Cart,
     CartItem,
     Coupon,
@@ -66,7 +67,13 @@ def index():
         .all()
     )
     featured_tags = Tag.query.limit(6).all()
-    return render_template("store/index.html", products=products, featured_tags=featured_tags)
+    recent_posts = (
+        BlogPost.query.filter_by(is_published=True)
+        .order_by(BlogPost.published_at.desc())
+        .limit(3)
+        .all()
+    )
+    return render_template("store/index.html", products=products, featured_tags=featured_tags, recent_posts=recent_posts)
 
 
 @store_bp.get("/products")
@@ -366,3 +373,15 @@ def order_status(order_no: str):
 @store_bp.get("/help")
 def help_page():
     return render_template("store/help.html")
+
+
+@store_bp.get("/blog")
+def blog_index():
+    posts = BlogPost.query.filter_by(is_published=True).order_by(BlogPost.published_at.desc()).all()
+    return render_template("store/blog_index.html", posts=posts)
+
+
+@store_bp.get("/blog/<string:slug>")
+def blog_detail(slug: str):
+    post = BlogPost.query.filter_by(slug=slug, is_published=True).first_or_404()
+    return render_template("store/blog_detail.html", post=post)

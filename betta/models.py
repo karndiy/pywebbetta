@@ -300,6 +300,25 @@ class Coupon(TimestampMixin, db.Model):
         return min(self.value, subtotal)
 
 
+
+
+class BlogPost(TimestampMixin, db.Model):
+    __tablename__ = "blog_posts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(db.String(255), nullable=False)
+    slug: Mapped[str] = mapped_column(db.String(255), unique=True, index=True, nullable=False)
+    content: Mapped[str] = mapped_column(db.Text, nullable=False)
+    hero_image: Mapped[str | None]
+    published_at: Mapped[datetime | None]
+    is_published: Mapped[bool] = mapped_column(default=False)
+
+    def publish(self) -> None:
+        if not self.published_at:
+            self.published_at = datetime.utcnow()
+        self.is_published = True
+
+
 class Setting(TimestampMixin, db.Model):
     __tablename__ = "settings"
 
